@@ -14,7 +14,9 @@ namespace Juego
 		bool isAlive;
 		bool inputActive;
 		bool isPlayerStickedOnWall;
-		bool isInvertedGravity;
+		bool isInvertedGravityY;
+		bool isInvertedGravityX;
+		bool activatedGravity;
 		Color textureTint;
 	};
 

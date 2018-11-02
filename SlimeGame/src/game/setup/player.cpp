@@ -10,8 +10,8 @@ namespace Juego
 	cube player;
 	static float playerAccelerationLeft = 0;
 	static float playerAccelerationRight = 0;
-	//static float playerAcceleration = 0;
-	//static float playerAcceleration = 0;
+	static float playerAccelerationUp = 0;
+	static float playerAccelerationDown = 0;
 
 	namespace Gameplay_Section
 	{
@@ -33,13 +33,24 @@ namespace Juego
 			player.rotation = 0;
 			player.textureTint = WHITE;
 			player.isPlayerStickedOnWall = false;
+			player.activatedGravity = false;
 		}
 		
 		void playerInput()
 		{
 			if (IsKeyPressed(playerKeys[GRAVITY]))
 			{
-				player.isInvertedGravity =! player.isInvertedGravity;
+				//player.isInvertedGravityY =! player.isInvertedGravityY;
+				if (player.isPlayerStickedOnWall && player.position.y > levelBackground.pos.y)
+				{
+					player.activatedGravity = true;
+					if (player.position.x < levelBackground.pos.x + (levelBackground.size.x/2)) player.isInvertedGravityX = true;
+					else if (player.position.x > levelBackground.pos.x + (levelBackground.size.x / 2)) player.isInvertedGravityX = false;
+					
+				}
+
+				if (player.activatedGravity && player.isInvertedGravityX) player.position.x = player.position.x + 10;
+				else if (player.activatedGravity && !player.isInvertedGravityX) player.position.x = player.position.x - 10;
 			}
 
 			if (IsKeyDown(playerKeys[UP]) && player.isPlayerStickedOnWall)
@@ -47,7 +58,12 @@ namespace Juego
 				if (player.position.y <= levelBackground.pos.y) player.position.y = levelBackground.pos.y;
 				else
 				{
-					player.position.y -= player.defaultSpeed * GetFrameTime();
+					playerAccelerationUp = playerAccelerationUp + 0.25f;
+
+					if (playerAccelerationDown <= 0) playerAccelerationDown = 0;
+					else playerAccelerationDown = playerAccelerationDown - 0.25f;
+
+					player.position.y -= playerAccelerationUp * GetFrameTime();
 					//player.rotation = 350;
 				}					
 			}
@@ -56,7 +72,12 @@ namespace Juego
 				if (player.position.y + player.size.y > levelBackground.pos.y + levelBackground.size.y) player.position.y = levelBackground.pos.y + levelBackground.size.y - player.size.y;
 				else
 				{
-					player.position.y += player.defaultSpeed * GetFrameTime();
+					playerAccelerationDown = playerAccelerationDown + 0.25f;
+
+					if (playerAccelerationUp <= 0) playerAccelerationUp = 0;
+					else playerAccelerationUp = playerAccelerationUp - 0.25f;
+
+					player.position.y += playerAccelerationDown * GetFrameTime();
 					//player.rotation = 10;
 				}	
 			}
@@ -82,10 +103,16 @@ namespace Juego
 				if (playerAccelerationRight <= 0) playerAccelerationRight = 0;
 				else playerAccelerationRight = playerAccelerationRight - 0.25f;
 
+				if (playerAccelerationUp <= 0) playerAccelerationUp = 0;
+				else playerAccelerationUp = playerAccelerationUp - 0.25f;
+
+				if (playerAccelerationDown <= 0) playerAccelerationDown = 0;
+				else playerAccelerationDown = playerAccelerationDown - 0.25f;
+
 				player.rotation = 0;
 			}
 
-			if (player.position.x == levelBackground.pos.x || player.position.x + player.size.x == levelBackground.pos.x + levelBackground.size.x || player.position.y == levelBackground.pos.y && !player.isInvertedGravity)
+			if (player.position.x <= levelBackground.pos.x || player.position.x + player.size.x >= levelBackground.pos.x + levelBackground.size.x || player.position.y <= levelBackground.pos.y && !player.isInvertedGravityY)
 			{
 				player.isPlayerStickedOnWall = true;
 				player.textureTint = RED;
@@ -101,15 +128,48 @@ namespace Juego
 		{
 			if (playerAccelerationLeft >= player.defaultSpeed) playerAccelerationLeft = player.defaultSpeed;
 			if (playerAccelerationRight >= player.defaultSpeed) playerAccelerationRight = player.defaultSpeed;
+			if (playerAccelerationDown >= player.defaultSpeed) playerAccelerationDown = player.defaultSpeed;
+			if (playerAccelerationUp >= player.defaultSpeed) playerAccelerationUp = player.defaultSpeed;
 
 			//playerAccelerationRight
 			
 			//if (player.position.y > )
-			if (!player.isPlayerStickedOnWall && player.position.y < levelBackground.pos.y + levelBackground.size.y && !player.isInvertedGravity) player.position.y += player.defaultSpeed * GetFrameTime();
-			else if (!player.isPlayerStickedOnWall && player.position.y > levelBackground.pos.y && player.isInvertedGravity) player.position.y -= player.defaultSpeed * GetFrameTime();
+			if (!player.isPlayerStickedOnWall && player.position.y < levelBackground.pos.y + levelBackground.size.y && !player.isInvertedGravityY && !player.activatedGravity) player.position.y += player.defaultSpeed*1.5f * GetFrameTime();
+			else if (!player.isPlayerStickedOnWall && player.position.y > levelBackground.pos.y && player.isInvertedGravityY && !player.activatedGravity) player.position.y -= player.defaultSpeed*1.5f * GetFrameTime();
 
-			if (player.position.y + player.size.y > levelBackground.pos.y + levelBackground.size.y) player.position.y = levelBackground.pos.y + levelBackground.size.y - player.size.y;
-			if (player.position.y < levelBackground.pos.y) player.position.y = levelBackground.pos.y;
+			if (!player.isPlayerStickedOnWall && player.position.x < levelBackground.pos.x + levelBackground.size.x && player.isInvertedGravityX && player.activatedGravity) player.position.x += player.defaultSpeed*3.0f * GetFrameTime();
+			else if (!player.isPlayerStickedOnWall && player.position.x > levelBackground.pos.x && !player.isInvertedGravityX && player.activatedGravity) player.position.x -= player.defaultSpeed*3.0f * GetFrameTime();
+
+			if (player.position.y + player.size.y > levelBackground.pos.y + levelBackground.size.y)
+			{
+				playerAccelerationDown = 0;
+				player.position.y = levelBackground.pos.y + levelBackground.size.y - player.size.y;
+			} 
+			else
+			{
+				player.position.y += playerAccelerationDown * GetFrameTime();
+			}
+
+			if (player.position.y < levelBackground.pos.y)
+			{
+				playerAccelerationUp = 0;
+				player.position.y = levelBackground.pos.y;
+			}
+			else
+			{
+				player.position.y -= playerAccelerationUp * GetFrameTime();
+			}
+
+			if (player.position.x + player.size.x > levelBackground.pos.x + levelBackground.size.x)
+			{
+				player.position.x = levelBackground.pos.x + levelBackground.size.x - player.size.x;
+				player.activatedGravity = false;
+			}
+			if (player.position.x < levelBackground.pos.x)
+			{
+				player.position.x = levelBackground.pos.x;
+				player.activatedGravity = false;
+			}
 
 			if (player.position.x + player.size.x > levelBackground.pos.x + levelBackground.size.x) 
 			{
