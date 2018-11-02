@@ -15,10 +15,12 @@ namespace Juego
 	};
 
 	extern obstacle levelBackground;
+	extern obstacle levelMiddleSquare;
 
 	namespace Gameplay_Section
 	{
 		void createLevelBackground();
+		void createLevelObstacles();
 		void DrawLevel();
 	}
 }

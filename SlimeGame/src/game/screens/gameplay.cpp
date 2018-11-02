@@ -69,6 +69,7 @@ namespace Juego
 			timerON = true;
 			createPauseButtons();
 			createLevelBackground();
+			createLevelObstacles();
 			createPlayer();
 		}
 
