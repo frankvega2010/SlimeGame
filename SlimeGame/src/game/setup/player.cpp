@@ -38,54 +38,14 @@ namespace Juego
 			player.isPlayerStickedOnWall2Y = false;
 			player.activatedGravity = false;
 			player.isInvertedGravityY = false;
-			player.moveLeft = false;
 		}
 		
 		void playerInput()
 		{
-			if (IsKeyPressed(playerKeys[GRAVITY]))
+			if (IsKeyPressed(playerKeys[GRAVITY]) && !player.activatedGravity)
 			{
-				//player.isInvertedGravityY =! player.isInvertedGravityY;
-				/*for (int i = 0; i < maxObstacles; i++)
-				{
-
-				}*/
-				//if (player.isPlayerStickedOnWall && player.position.y > obstacles[obMiddleSquare].pos.y + obstacles[obMiddleSquare].size.y)
-				//{
-				//	player.activatedGravity = true;
-				////	if (player.position.x < obstacles[obMiddleSquare].pos.x + (obstacles[obMiddleSquare].size.x / 2)) player.isInvertedGravityX = true;
-				//	//else if (player.position.x > obstacles[obMiddleSquare].pos.x + (obstacles[obMiddleSquare].size.x / 2)) player.isInvertedGravityX = false; // IGUAL
-
-				//}
-					/*if (player.position.x < obstacles[obBackground].pos.x + (obstacles[obBackground].size.x/2)) player.isInvertedGravityX = true;
-					else if (player.position.x > obstacles[obBackground].pos.x + (obstacles[obBackground].size.x / 2)) player.isInvertedGravityX = false;*/ // IGUAL
-
-					////if (player.position.x + player.size.x > obstacles[obMiddleSquare].pos.x && player.position.x + player.size.x < obstacles[obMiddleSquare].pos.x + (obstacles[obMiddleSquare].size.x / 2)) player.isInvertedGravityX = true;
-					//else if (player.position.x > obstacles[obBackground].pos.x + (obstacles[obBackground].size.x / 2)) player.isInvertedGravityX = false;
-
 					if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare].pos.x,obstacles[obMiddleSquare].pos.y,obstacles[obMiddleSquare].size.x,obstacles[obMiddleSquare].size.y }))
 					{
-						//player.activatedGravity = false;
-						//player.position.x = player.position.x - 10;
-						//if (player.position.x + player.size.x > obstacles[obMiddleSquare].pos.x && player.position.x + player.size.x < obstacles[obMiddleSquare].pos.x + (obstacles[obMiddleSquare].size.x / 2)) player.isInvertedGravityX = true;
-						//else if (player.position.x < obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x && player.position.x > obstacles[obMiddleSquare].pos.x + (obstacles[obMiddleSquare].size.x / 2)) player.isInvertedGravityX = false;
-
-						//
-						//
-
-						/*if (player.position.x + player.size.x < obstacles[obMiddleSquare].pos.x)
-						{
-							player.isInvertedGravityX = true;
-						}
-						else if (player.position.x > obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x )
-						{
-							player.isInvertedGravityX = false;
-						}*/
-
-						//player.isInvertedGravityX = true;
-
-
-
 						player.activatedGravity = true;
 						if (player.activatedGravity && player.isInvertedGravityX) player.position.x = player.position.x + 10;
 						else if (player.activatedGravity && !player.isInvertedGravityX) player.position.x = player.position.x - 10;
@@ -139,16 +99,15 @@ namespace Juego
 					//player.rotation = 10;
 				}	
 			}
-			else if (IsKeyDown(playerKeys[RIGHT]))
+			else if (IsKeyDown(playerKeys[RIGHT]) && !player.activatedGravity)
 			{
 				playerAccelerationRight = playerAccelerationRight + 0.25f;
 
 				if (playerAccelerationLeft <= 0) playerAccelerationLeft = 0;
 				else playerAccelerationLeft = playerAccelerationLeft - 0.25f;
 			}
-			else if (IsKeyDown(playerKeys[LEFT]))
+			else if (IsKeyDown(playerKeys[LEFT]) && !player.activatedGravity)
 			{
-				player.moveLeft = true;
 
 				playerAccelerationLeft = playerAccelerationLeft + 0.25f;
 
@@ -265,17 +224,19 @@ namespace Juego
 				}
 
 			}
-			else if (player.position.x <= obstacles[obBackground].pos.x || player.position.x + player.size.x >= obstacles[obBackground].pos.x + obstacles[obBackground].size.x && !player.isInvertedGravityY)
+			else if ((player.position.x <= obstacles[obBackground].pos.x || player.position.x + player.size.x >= obstacles[obBackground].pos.x + obstacles[obBackground].size.x ) && !player.isInvertedGravityY && !player.isPlayerStickedOnWallY)
 			{
 				//player.isPlayerStickedOnWallY = false;
 				player.isPlayerStickedOnWall = true;
 				player.isPlayerStickedOnWall2 = false;
+				player.activatedGravity = false;
 				player.textureTint = RED;
 			}
 			else if (player.position.y <= obstacles[obBackground].pos.y && !player.isInvertedGravityY)
 			{
 				player.isPlayerStickedOnWall = false;
 				player.isPlayerStickedOnWallY = true;
+				player.activatedGravity = false;
 				player.textureTint = GREEN;
 			}
 			else

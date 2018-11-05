@@ -20,7 +20,6 @@ namespace Juego
 		bool isInvertedGravityY;
 		bool isInvertedGravityX;
 		bool activatedGravity;
-		bool moveLeft;
 		Color textureTint;
 	};
 
