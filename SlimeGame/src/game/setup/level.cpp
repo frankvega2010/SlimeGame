@@ -4,37 +4,49 @@
 
 namespace Juego
 {
-	obstacle levelBackground;
-	obstacle levelMiddleSquare;
+	//obstacle levelBackground;
+	//obstacle levelMiddleSquare;
+
+	obstacle obstacles[maxObstacles];
 
 	namespace Gameplay_Section
 	{
 		void createLevelBackground()
 		{
-			levelBackground.pos.x = 0 + 50;
-			levelBackground.pos.y = 0 + 50;
-			levelBackground.size.x = screenWidth - 100;
-			levelBackground.size.y = screenHeight - 100;
-			levelBackground.speed = 0;
-			levelBackground.isAlive = true;
-			levelBackground.color = GRAY;
+			
 		}
 
 		void createLevelObstacles()
 		{
-			levelMiddleSquare.pos.x = screenWidth/2 - 200;
-			levelMiddleSquare.pos.y = screenHeight/2 - 200;
-			levelMiddleSquare.size.x = 400;
-			levelMiddleSquare.size.y = 400;
-			levelMiddleSquare.speed = 0;
-			levelMiddleSquare.isAlive = true;
-			levelMiddleSquare.color = BLACK;
+			/*for (int i = 0;i < maxObstacles;i++)
+			{
+
+			}*/
+
+			obstacles[obBackground].pos.x = 0 + 50;
+			obstacles[obBackground].pos.y = 0 + 50;
+			obstacles[obBackground].size.x = screenWidth - 100;
+			obstacles[obBackground].size.y = screenHeight - 100;
+			obstacles[obBackground].speed = 0;
+			obstacles[obBackground].isAlive = true;
+			obstacles[obBackground].color = GRAY;
+
+			obstacles[obMiddleSquare].pos.x = screenWidth/2 - 200;
+			obstacles[obMiddleSquare].pos.y = screenHeight/2 - 200;
+			obstacles[obMiddleSquare].size.x = 400;
+			obstacles[obMiddleSquare].size.y = 400;
+			obstacles[obMiddleSquare].speed = 0;
+			obstacles[obMiddleSquare].isAlive = true;
+			obstacles[obMiddleSquare].color = BLACK;
 		}
 
 		void DrawLevel()
 		{
-			DrawRectangle(levelBackground.pos.x, levelBackground.pos.y, levelBackground.size.x, levelBackground.size.y, levelBackground.color);
-			DrawRectangle(levelMiddleSquare.pos.x, levelMiddleSquare.pos.y, levelMiddleSquare.size.x, levelMiddleSquare.size.y, levelMiddleSquare.color);
+			for (int i = 0; i < maxObstacles; i++)
+			{
+				DrawRectangle(obstacles[i].pos.x, obstacles[i].pos.y, obstacles[i].size.x, obstacles[i].size.y, obstacles[i].color);
+			}
+			//DrawRectangle(levelMiddleSquare.pos.x, levelMiddleSquare.pos.y, levelMiddleSquare.size.x, levelMiddleSquare.size.y, levelMiddleSquare.color);
 		}
 	}
 }

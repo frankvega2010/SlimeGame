@@ -5,6 +5,12 @@
 
 namespace Juego
 {
+	enum obstacles
+	{
+		obBackground = 0,
+		obMiddleSquare,
+		maxObstacles
+	};
 	struct obstacle
 	{
 		Vector2 pos;
@@ -14,8 +20,9 @@ namespace Juego
 		Color color;
 	};
 
-	extern obstacle levelBackground;
-	extern obstacle levelMiddleSquare;
+	//extern obstacle levelBackground;
+	//extern obstacle levelMiddleSquare;
+	extern obstacle obstacles[maxObstacles];
 
 	namespace Gameplay_Section
 	{
