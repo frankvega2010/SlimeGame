@@ -7,8 +7,8 @@ namespace Juego
 {
 	enum obstacles
 	{
-		obBackground = 0,
-		obMiddleSquare,
+		obMiddleSquare = 0,
+		obMiddleSquare2,
 		maxObstacles
 	};
 	struct obstacle
@@ -22,6 +22,7 @@ namespace Juego
 
 	//extern obstacle levelBackground;
 	//extern obstacle levelMiddleSquare;
+	extern obstacle obBackground;
 	extern obstacle obstacles[maxObstacles];
 
 	namespace Gameplay_Section
