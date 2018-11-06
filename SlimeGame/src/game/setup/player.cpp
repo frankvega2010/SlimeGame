@@ -27,7 +27,8 @@ namespace Juego
 				player.size = { 50 / resolutionSizeFix, 50 / resolutionSizeFix };
 				player.defaultSpeed = 500.0f / resolutionSizeFix;
 			}
-			player.position = { (float)screenWidth / 2, obBackground.pos.y + obBackground.size.y - player.size.y};
+			if(currentLevel == 1) player.position = { (float)screenWidth / 10, obBackground.pos.y + obBackground.size.y - player.size.y};
+			else if(currentLevel == 2) player.position = { (float)screenWidth / 10, obBackground.pos.y + player.size.y };
 			player.isAlive = true;
 			player.inputActive = false;
 			player.rotation = 0;
@@ -40,21 +41,44 @@ namespace Juego
 			player.isInvertedGravityY = false;
 		}
 		
+		void playerGravityExec()
+		{
+			player.activatedGravity = true;
+			if (player.activatedGravity && player.isInvertedGravityX) player.position.x = player.position.x + 10;
+			else if (player.activatedGravity && !player.isInvertedGravityX) player.position.x = player.position.x - 10;
+		}
+
 		void playerInput()
 		{
 			if (IsKeyPressed(playerKeys[GRAVITY]) && !player.activatedGravity)
 			{
 					if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare].pos.x,obstacles[obMiddleSquare].pos.y,obstacles[obMiddleSquare].size.x,obstacles[obMiddleSquare].size.y }))
 					{
-						player.activatedGravity = true;
-						if (player.activatedGravity && player.isInvertedGravityX) player.position.x = player.position.x + 10;
-						else if (player.activatedGravity && !player.isInvertedGravityX) player.position.x = player.position.x - 10;
+						playerGravityExec();
 					}
 					else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare2].pos.x,obstacles[obMiddleSquare2].pos.y,obstacles[obMiddleSquare2].size.x,obstacles[obMiddleSquare2].size.y }))
 					{
-						player.activatedGravity = true;
-						if (player.activatedGravity && player.isInvertedGravityX) player.position.x = player.position.x + 10;
-						else if (player.activatedGravity && !player.isInvertedGravityX) player.position.x = player.position.x - 10;
+						playerGravityExec();
+					}
+					else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare3].pos.x,obstacles[obMiddleSquare3].pos.y,obstacles[obMiddleSquare3].size.x,obstacles[obMiddleSquare3].size.y }))
+					{
+						playerGravityExec();
+					}
+					else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare4].pos.x,obstacles[obMiddleSquare4].pos.y,obstacles[obMiddleSquare4].size.x,obstacles[obMiddleSquare4].size.y }))
+					{
+						playerGravityExec();
+					}
+					else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare5].pos.x,obstacles[obMiddleSquare5].pos.y,obstacles[obMiddleSquare5].size.x,obstacles[obMiddleSquare5].size.y }))
+					{
+						playerGravityExec();
+					}
+					else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare6].pos.x,obstacles[obMiddleSquare6].pos.y,obstacles[obMiddleSquare6].size.x,obstacles[obMiddleSquare6].size.y }))
+					{
+						playerGravityExec();
+					}
+					else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare7].pos.x,obstacles[obMiddleSquare7].pos.y,obstacles[obMiddleSquare7].size.x,obstacles[obMiddleSquare7].size.y }))
+					{
+						playerGravityExec();
 					}
 					else if (player.isPlayerStickedOnWall)
 					{
@@ -73,11 +97,22 @@ namespace Juego
 					{
 						player.activatedGravity = false;
 					}
+					
 			}
 
 			if (IsKeyDown(playerKeys[UP]) && (player.isPlayerStickedOnWall || player.isPlayerStickedOnWall2))
 			{
 				if (player.position.y <= obBackground.pos.y) player.position.y = obBackground.pos.y;
+				else if (currentLevel == 1 && player.position.y <= obstacles[obMiddleSquare3].pos.y + obstacles[obMiddleSquare3].size.y && player.position.x + player.size.x >= obstacles[obMiddleSquare3].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare3].pos.x + obstacles[obMiddleSquare3].size.x)
+				{
+					player.position.y = obstacles[obMiddleSquare3].pos.y + obstacles[obMiddleSquare3].size.y;
+					playerAccelerationUp = 0;
+				}
+				else if (currentLevel == 2 && player.position.y <= obstacles[obMiddleSquare6].pos.y + obstacles[obMiddleSquare6].size.y && player.position.x >= obstacles[obMiddleSquare6].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare6].pos.x + obstacles[obMiddleSquare6].size.x)
+				{
+					player.position.y = obstacles[obMiddleSquare6].pos.y + obstacles[obMiddleSquare6].size.y;
+					playerAccelerationUp = 0;
+				}
 				else
 				{
 					playerAccelerationUp = playerAccelerationUp + 0.25f;
@@ -91,6 +126,11 @@ namespace Juego
 			else if (IsKeyDown(playerKeys[DOWN]) && (player.isPlayerStickedOnWall || player.isPlayerStickedOnWallY || player.isPlayerStickedOnWall2))
 			{
 				if (player.position.y + player.size.y > obBackground.pos.y + obBackground.size.y) player.position.y = obBackground.pos.y + obBackground.size.y - player.size.y;
+				else if (currentLevel == 2 && player.position.y + player.size.y >= obstacles[obMiddleSquare7].pos.y && player.position.y + player.size.y <= obstacles[obMiddleSquare7].pos.y + obstacles[obMiddleSquare7].size.y - 0.1f && player.position.x + player.size.x >= obstacles[obMiddleSquare7].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare7].pos.x + obstacles[obMiddleSquare7].size.x)
+				{
+					player.position.y = obstacles[obMiddleSquare7].pos.y - player.size.y;
+					playerAccelerationDown = 0;
+				}
 				else 
 				{
 					playerAccelerationDown = playerAccelerationDown + 0.25f;
@@ -134,6 +174,56 @@ namespace Juego
 			}
 		}
 
+		void playerCollisions(int obstacle)
+		{
+			player.textureTint = PURPLE;
+
+			if (player.position.x <= obstacles[obstacle].pos.x + obstacles[obstacle].size.x && player.position.x > obstacles[obstacle].pos.x + obstacles[obstacle].size.x - 10)
+			{
+				player.isInvertedGravityX = true;
+				player.textureTint = BLUE;
+			}
+			else if (player.position.x + player.size.x >= obstacles[obstacle].pos.x && player.position.x + player.size.x <= obstacles[obstacle].pos.x + 10)
+			{
+				player.isInvertedGravityX = false;
+				player.textureTint = YELLOW;
+			}
+
+			if (player.position.y + player.size.y >= obstacles[obstacle].pos.y && player.position.y + player.size.y <= obstacles[obstacle].pos.y + 10)
+			{
+				player.isPlayerStickedOnWall = false;
+				player.isPlayerStickedOnWall2 = true;
+				player.activatedGravity = false;
+				player.position.y = obstacles[obstacle].pos.y - player.size.y;
+				//playerAccelerationUp = 0;
+			}
+			else if (player.position.y <= obstacles[obstacle].pos.y + obstacles[obstacle].size.y && player.position.y >= obstacles[obstacle].pos.y + obstacles[obstacle].size.y - 10)
+			{
+				player.isPlayerStickedOnWall = false;
+				player.isPlayerStickedOnWall2 = true;
+				player.activatedGravity = false;
+				player.position.y = obstacles[obstacle].pos.y + obstacles[obstacle].size.y;
+				
+				//playerAccelerationDown = 0;
+			}
+			else if (player.position.x + player.size.x >= obstacles[obstacle].pos.x && player.position.x + player.size.x <= obstacles[obstacle].pos.x + 10 && player.position.y + player.size.y >= obstacles[obstacle].pos.y && player.position.y <= obstacles[obstacle].pos.y + obstacles[obstacle].size.y)
+			{
+				player.isPlayerStickedOnWall = false;
+				player.isPlayerStickedOnWall2 = true;
+				player.activatedGravity = false;
+				player.position.x = obstacles[obstacle].pos.x - player.size.x;
+				//playerAccelerationRight = 0;
+			}
+			else if (player.position.x <= obstacles[obstacle].pos.x + obstacles[obstacle].size.x && player.position.x > obstacles[obstacle].pos.x + obstacles[obstacle].size.x - 10 && player.position.y + player.size.y >= obstacles[obstacle].pos.y && player.position.y <= obstacles[obstacle].pos.y + obstacles[obstacle].size.y)
+			{
+				player.isPlayerStickedOnWall = false;
+				player.isPlayerStickedOnWall2 = true;
+				player.activatedGravity = false;
+				player.position.x = obstacles[obstacle].pos.x + obstacles[obstacle].size.x - 0.1f;
+				//playerAccelerationLeft = 0;
+			}
+		}
+
 		void playerUpdate()
 		{
 			if (playerAccelerationLeft >= player.defaultSpeed) playerAccelerationLeft = player.defaultSpeed;
@@ -148,96 +238,51 @@ namespace Juego
 			else if (!player.isPlayerStickedOnWall && player.position.x > obBackground.pos.x && !player.isInvertedGravityX && player.activatedGravity) player.position.x -= player.defaultSpeed*3.0f * GetFrameTime();
 
 			//////////////////////////////////--------------------------
+			
+			if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { exit.pos.x,exit.pos.y,exit.size.x,exit.size.y }))
+			{
+				if (currentLevel < 3) currentLevel++;
+				
+				InitGameplayVariables();
+				//playerCollisions(obMiddleSquare7);
+			}
+
+			for (int i = 0; i < maxSpikes; i++)
+			{
+				if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { spikes[i].pos.x,spikes[i].pos.y,spikes[i].size.x,spikes[i].size.y }))
+				{
+					createPlayer();
+					//playerCollisions(obMiddleSquare7);
+				}
+			}
 
 				if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare].pos.x,obstacles[obMiddleSquare].pos.y,obstacles[obMiddleSquare].size.x,obstacles[obMiddleSquare].size.y }))
 				{
-					player.textureTint = PURPLE;
-
-					if (player.position.x <= obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x && player.position.x > obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x - 10)
-					{
-						player.isInvertedGravityX = true;
-						player.textureTint = BLUE;
-					}
-					else if (player.position.x + player.size.x >= obstacles[obMiddleSquare].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare].pos.x + 10)
-					{
-						player.isInvertedGravityX = false;
-						player.textureTint = YELLOW;
-					}
-
-					if (player.position.y + player.size.y >= obstacles[obMiddleSquare].pos.y && player.position.y + player.size.y <= obstacles[obMiddleSquare].pos.y + 10)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.y = obstacles[obMiddleSquare].pos.y - player.size.y;
-					}
-					else if (player.position.y <= obstacles[obMiddleSquare].pos.y + obstacles[obMiddleSquare].size.y && player.position.y >= obstacles[obMiddleSquare].pos.y + obstacles[obMiddleSquare].size.y - 10)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.y = obstacles[obMiddleSquare].pos.y + obstacles[obMiddleSquare].size.y;
-					}
-					else if (player.position.x + player.size.x >= obstacles[obMiddleSquare].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare].pos.x + 10 && player.position.y + player.size.y >= obstacles[obMiddleSquare].pos.y && player.position.y <= obstacles[obMiddleSquare].pos.y + obstacles[obMiddleSquare].size.y)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.x = obstacles[obMiddleSquare].pos.x - player.size.x;
-					}
-					else if (player.position.x <= obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x && player.position.x > obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x - 10 && player.position.y + player.size.y >= obstacles[obMiddleSquare].pos.y && player.position.y <= obstacles[obMiddleSquare].pos.y + obstacles[obMiddleSquare].size.y)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.x = obstacles[obMiddleSquare].pos.x + obstacles[obMiddleSquare].size.x;
-					}
-
+					playerCollisions(obMiddleSquare);
 				}
 				else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare2].pos.x,obstacles[obMiddleSquare2].pos.y,obstacles[obMiddleSquare2].size.x,obstacles[obMiddleSquare2].size.y }))
 				{
-					player.textureTint = PURPLE;
-
-					if (player.position.x <= obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x && player.position.x > obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x - 10)
-					{
-						player.isInvertedGravityX = true;
-						player.textureTint = BLUE;
-					}
-					else if (player.position.x + player.size.x >= obstacles[obMiddleSquare2].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare2].pos.x + 10)
-					{
-						player.isInvertedGravityX = false;
-						player.textureTint = YELLOW;
-					}
-
-					if (player.position.y + player.size.y >= obstacles[obMiddleSquare2].pos.y && player.position.y + player.size.y <= obstacles[obMiddleSquare2].pos.y + 10)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.y = obstacles[obMiddleSquare2].pos.y - player.size.y;
-					}
-					else if (player.position.y <= obstacles[obMiddleSquare2].pos.y + obstacles[obMiddleSquare2].size.y && player.position.y >= obstacles[obMiddleSquare2].pos.y + obstacles[obMiddleSquare2].size.y - 10)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.y = obstacles[obMiddleSquare2].pos.y + obstacles[obMiddleSquare2].size.y;
-					}
-					else if (player.position.x + player.size.x >= obstacles[obMiddleSquare2].pos.x && player.position.x + player.size.x <= obstacles[obMiddleSquare2].pos.x + 10 && player.position.y + player.size.y >= obstacles[obMiddleSquare2].pos.y && player.position.y <= obstacles[obMiddleSquare2].pos.y + obstacles[obMiddleSquare2].size.y)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.x = obstacles[obMiddleSquare2].pos.x - player.size.x;
-					}
-					else if (player.position.x <= obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x && player.position.x > obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x - 10 && player.position.y + player.size.y >= obstacles[obMiddleSquare2].pos.y && player.position.y <= obstacles[obMiddleSquare2].pos.y + obstacles[obMiddleSquare2].size.y)
-					{
-						player.isPlayerStickedOnWall = false;
-						player.isPlayerStickedOnWall2 = true;
-						player.activatedGravity = false;
-						player.position.x = obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x;
-					}
-
+					playerCollisions(obMiddleSquare2);
+				}
+				else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare3].pos.x,obstacles[obMiddleSquare3].pos.y,obstacles[obMiddleSquare3].size.x,obstacles[obMiddleSquare3].size.y }))
+				{
+					playerCollisions(obMiddleSquare3);
+				}
+				else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare4].pos.x,obstacles[obMiddleSquare4].pos.y,obstacles[obMiddleSquare4].size.x,obstacles[obMiddleSquare4].size.y }))
+				{
+					playerCollisions(obMiddleSquare4);
+				}
+				else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare5].pos.x,obstacles[obMiddleSquare5].pos.y,obstacles[obMiddleSquare5].size.x,obstacles[obMiddleSquare5].size.y }))
+				{
+					playerCollisions(obMiddleSquare5);
+				}
+				else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare6].pos.x,obstacles[obMiddleSquare6].pos.y,obstacles[obMiddleSquare6].size.x,obstacles[obMiddleSquare6].size.y }))
+				{
+					playerCollisions(obMiddleSquare6);
+				}
+				else if (CheckCollisionRecs({ player.position.x, player.position.y, player.size.x, player.size.y }, { obstacles[obMiddleSquare7].pos.x,obstacles[obMiddleSquare7].pos.y,obstacles[obMiddleSquare7].size.x,obstacles[obMiddleSquare7].size.y }))
+				{
+					playerCollisions(obMiddleSquare7);
 				}
 				else if ((player.position.x <= obBackground.pos.x || player.position.x + player.size.x >= obBackground.pos.x + obBackground.size.x) && !player.isInvertedGravityY && !player.isPlayerStickedOnWallY)
 				{

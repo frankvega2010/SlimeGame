@@ -9,6 +9,14 @@ namespace Juego
 	{
 		obMiddleSquare = 0,
 		obMiddleSquare2,
+		obMiddleSquare3,
+		obMiddleSquare4,
+		obMiddleSquare5,
+		obMiddleSquare6,
+		obMiddleSquare7,
+		obMiddleSquare8,
+		obMiddleSquare9,
+		obMiddleSquare10,
 		maxObstacles
 	};
 	struct obstacle
@@ -20,10 +28,14 @@ namespace Juego
 		Color color;
 	};
 
+	const int maxSpikes = 5;
+	extern int currentLevel;
 	//extern obstacle levelBackground;
 	//extern obstacle levelMiddleSquare;
 	extern obstacle obBackground;
 	extern obstacle obstacles[maxObstacles];
+	extern obstacle spikes[maxSpikes];
+	extern obstacle exit;
 
 	namespace Gameplay_Section
 	{

@@ -80,7 +80,8 @@ namespace Juego
 
 		void InitGameplayScreen()
 		{
-			
+			currentLevel = 1;
+
 			if (resolutionNormal)
 			{
 				//shipImage = LoadImage("res/assets/textures/player_ship01v2.png");
