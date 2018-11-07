@@ -25,6 +25,12 @@ namespace Juego
 
 	extern bool gameON;
 	extern int playerKeys[MAX];
+	extern Texture2D slime;
+	extern Texture2D enemy01;
+	extern Sound slimeJump;
+	extern Sound slimeSplash;
+	extern Music slimeMove;
+	extern Music backgroundSong;
 
 	namespace Gameplay_Section
 	{

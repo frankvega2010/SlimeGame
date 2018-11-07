@@ -76,8 +76,8 @@ namespace Juego
 
 		InitWindow(screenWidth, screenHeight, "Simple! Gradius");
 
-		mainFont = LoadFont("res/assets/fonts/bigmacca.ttf");
-		sideFont = LoadFont("res/assets/fonts/Reality_Pursuit_NC.ttf");
+		mainFont = LoadFont("res/assets/fonts/Bubblegum.ttf");
+		sideFont = LoadFont("res/assets/fonts/KGCrossingALine.ttf");
 
 		resolutionBackground();
 
@@ -87,8 +87,9 @@ namespace Juego
 		playerKeys[RIGHT] = KEY_RIGHT;
 		playerKeys[GRAVITY] = KEY_SPACE;
 
-		#ifdef AUDIO
 		InitAudioDevice();
+		#ifdef AUDIO
+		
 		song_invasion = LoadMusicStream("res/assets/music/invasion.ogg");
 		SetMusicVolume(song_invasion , songVolume);
 
@@ -277,8 +278,9 @@ namespace Juego
 		UnloadSound(button_navigate01);
 		UnloadSound(button_select01);
 		UnloadMusicStream(song_invasion);
-		CloseAudioDevice();
+		
 #endif
+		CloseAudioDevice();
 		UnloadFont(mainFont);
 		UnloadFont(sideFont);
 		CloseWindow();

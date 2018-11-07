@@ -28,7 +28,7 @@ namespace Juego
 		Color color;
 	};
 
-	const int maxSpikes = 5;
+	const int maxSpikes = 7;
 	extern int currentLevel;
 	//extern obstacle levelBackground;
 	//extern obstacle levelMiddleSquare;
@@ -36,6 +36,9 @@ namespace Juego
 	extern obstacle obstacles[maxObstacles];
 	extern obstacle spikes[maxSpikes];
 	extern obstacle exit;
+	extern Rectangle enemy01Source;
+	extern Rectangle enemy02Source;
+	extern Rectangle enemy03Source;
 
 	namespace Gameplay_Section
 	{

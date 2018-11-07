@@ -28,6 +28,37 @@ namespace Juego
 	static bool isButtonSoundPlaying = false;
 	static int buttonSelectSaveNumber = 0;
 
+	Sound slimeJump;
+	Sound slimeSplash;
+	Music slimeMove;
+	Music backgroundSong;
+
+	static Image slimeImage;
+	static Image enemyImage;
+	//static Image levelBackgound01Image;
+
+	Texture2D slime;
+	Texture2D enemy01;
+	static Texture2D levelBackground;
+	static Texture2D levelBackground01;
+	static Texture2D levelBackground02;
+	static Texture2D levelBackground03;
+
+	static int speedEnemy = 200.0f;
+	static int speedEnemy2 = 200.0f;
+	static int speedEnemy3 = 260.0f;
+
+	static int currentFrameEnemy01a = 0;
+	static int currentFrameEnemy02a = 0;
+	static int currentFrameEnemy03a = 0;
+	static int currentFrameEnemy01b = 2;
+
+	static Rectangle enemy01Destination;
+	static Rectangle enemy02Destination;
+	static Rectangle enemy03Destination;
+
+	static Vector2 enemy01Origin = { 30,10 };
+
 	namespace Gameplay_Section
 	{
 		static void createPauseButtons()
@@ -84,9 +115,23 @@ namespace Juego
 
 			if (resolutionNormal)
 			{
-				//shipImage = LoadImage("res/assets/textures/player_ship01v2.png");
-				//ImageResize(&shipImage, 300, 70);// 150 70
-				//ship = LoadTextureFromImage(shipImage);
+				slimeJump = LoadSound("res/assets/sounds/slimejump.wav");
+				slimeSplash = LoadSound("res/assets/sounds/slimesplash.wav");
+				slimeMove = LoadMusicStream("res/assets/sounds/slimemove.ogg");
+				backgroundSong = LoadMusicStream("res/assets/sounds/song.ogg");
+
+				levelBackground = LoadTexture("res/assets/textures/levelbackground.png");
+				levelBackground01 = LoadTexture("res/assets/textures/levelbackground01.png");
+				levelBackground02 = LoadTexture("res/assets/textures/levelbackground02.png");
+				levelBackground03 = LoadTexture("res/assets/textures/levelbackground03.png");
+
+				slimeImage = LoadImage("res/assets/textures/playerspritesheet.png");
+				ImageResize(&slimeImage, 600, 60);// 300 50
+				slime = LoadTextureFromImage(slimeImage);
+
+				enemyImage = LoadImage("res/assets/textures/enemyspritessheet.png");
+				ImageResize(&enemyImage, 400, 60);// 150 60 mitad
+				enemy01 = LoadTextureFromImage(enemyImage);
 
 				//enemyShipImage = LoadImage("res/assets/textures/enemy01.png");
 				//ImageResize(&enemyShipImage, 180, 70);
@@ -97,7 +142,8 @@ namespace Juego
 				//pauseMenu = LoadTextureFromImage(pauseMenuImage);
 
 				//UnloadImage(pauseMenuImage);
-				//UnloadImage(shipImage);
+				UnloadImage(slimeImage);
+				UnloadImage(enemyImage);
 				//UnloadImage(enemyShipImage);
 
 			}
@@ -130,6 +176,8 @@ namespace Juego
 			SetSoundVolume(button_select01, soundVolume);
 			SetSoundVolume(button_navigate01, soundVolume);
 			#endif
+
+			PlayMusicStream(backgroundSong);
 			isScreenFinished = false;
 		}
 
@@ -199,6 +247,12 @@ namespace Juego
 
 		void UpdateGameplayScreen()
 		{	
+			UpdateMusicStream(backgroundSong);
+
+			enemy01Source.x = (float)currentFrameEnemy01a*(float)enemy01.width / 4;
+			enemy02Source.x = (float)currentFrameEnemy02a*(float)enemy01.width / 4;
+			enemy03Source.x = (float)currentFrameEnemy03a*(float)enemy01.width / 4;
+
 			player.inputActive = false;
 
 			mouse.position = { (float)GetMouseX(),(float)GetMouseY() };
@@ -217,10 +271,54 @@ namespace Juego
 
 			if (gameON)
 			{		
+				SetMusicVolume(backgroundSong, 0.90f);
 				playerUpdate();
+
+				if (spikes[3].pos.x + spikes[3].size.x >= obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x + 325)
+				{
+					speedEnemy = speedEnemy * (-1);
+					currentFrameEnemy02a++;
+				}
+				else if (spikes[3].pos.x <= obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x)
+				{
+					speedEnemy = speedEnemy * (-1);
+					currentFrameEnemy02a--;
+				}
+
+				spikes[3].pos.x += speedEnemy * GetFrameTime();
+
+				if (spikes[6].pos.x + spikes[6].size.x >= obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x + 325)
+				{
+					speedEnemy3 = speedEnemy3 * (-1);
+					currentFrameEnemy03a++;
+				}
+				else if (spikes[6].pos.x <= obstacles[obMiddleSquare2].pos.x + obstacles[obMiddleSquare2].size.x)
+				{
+					speedEnemy3 = speedEnemy3 * (-1);
+					currentFrameEnemy03a--;
+				}
+
+				spikes[6].pos.x += speedEnemy3 * GetFrameTime();
+
+				if (spikes[5].pos.x + spikes[5].size.x >= obstacles[obMiddleSquare2].pos.x + 1)
+				{
+					speedEnemy2 = speedEnemy2 * (-1);
+					currentFrameEnemy01a++;
+					//currentFrameEnemy01b--;
+				}
+				else if (spikes[5].pos.x <= obstacles[obMiddleSquare2].pos.x - 255)
+				{
+					speedEnemy2 = speedEnemy2 * (-1);
+					//currentFrameEnemy01b++;
+					currentFrameEnemy01a--;
+				}
+
+				spikes[5].pos.x += speedEnemy2 * GetFrameTime();
+
 			}
 			else if (gamePaused)
 			{
+				SetMusicVolume(backgroundSong, 0.30f);
 				timerON = false;
 
 				for (int i = 0; i < maxButtons; i++)
@@ -269,8 +367,40 @@ namespace Juego
 		void DrawGameplay()
 		{
 			DrawLevel();
-			playerDraw();
+
 			
+			switch (currentLevel)
+			{
+			case 1:
+				DrawTexture(levelBackground, 0, 0, WHITE);
+				DrawTexture(levelBackground01, 0, 0, WHITE);
+				break;
+			case 2:
+				DrawTexture(levelBackground, 0, 0, WHITE);
+				DrawTexture(levelBackground02, 0, 0, WHITE);
+				break;
+			case 3:
+				DrawTexture(levelBackground, 0, 0, WHITE);
+				DrawTexture(levelBackground03, 0, 0, WHITE);
+				break;
+			default:
+				break;
+			}
+
+			
+			playerDraw();
+
+			if (currentLevel == 3)
+			{
+				enemy01Destination = { spikes[5].pos.x,spikes[5].pos.y, 100,60 };
+				enemy02Destination = { spikes[3].pos.x,spikes[3].pos.y, 100,60 };
+				enemy03Destination = { spikes[6].pos.x,spikes[6].pos.y, 100,60 };
+
+				DrawTexturePro(enemy01, enemy01Source, enemy01Destination, enemy01Origin, 0, WHITE);
+				DrawTexturePro(enemy01, enemy02Source, enemy02Destination, enemy01Origin, 0, WHITE);
+				DrawTexturePro(enemy01, enemy03Source, enemy03Destination, enemy01Origin, 0, WHITE);
+			}
+
 
 			DrawRectangleLines(pauseButton.position.x, pauseButton.position.y, pauseButton.width, pauseButton.height, pauseButton.defaultColor);
 
@@ -283,6 +413,8 @@ namespace Juego
 			{
 				if (gamePaused)
 				{
+					DrawRectangleRec(pauseBoxRec, DARKPURPLE);
+					//DrawTexturePro(pauseMenu, { 0, 0, (float)screenWidth / 4.2f, (float)screenHeight / 2.5f }, pauseBoxRec, { 0,0 }, 0, WHITE);
 					//if(resolutionNormal) DrawTexturePro(pauseMenu, { 0, 0, (float)screenWidth / 4.2f, (float)screenHeight / 2.5f }, pauseBoxRec, { 0,0 }, 0, WHITE);
 					//else if(resolutionSmall) DrawTexturePro(pauseMenu, { 0, 0, (float)screenWidth / 4.2f, (float)screenHeight / 2.5f }, pauseBoxRec, { 0,0 }, 0, WHITE);
 					
@@ -320,7 +452,16 @@ namespace Juego
 
 		void DeInitGameplayResources()
 		{
-
+			UnloadTexture(slime);
+			UnloadTexture(enemy01);
+			UnloadTexture(levelBackground);
+			UnloadTexture(levelBackground01);
+			UnloadTexture(levelBackground02);
+			UnloadTexture(levelBackground03);
+			UnloadSound(slimeJump);
+			UnloadSound(slimeSplash);
+			UnloadMusicStream(slimeMove);
+			UnloadMusicStream(backgroundSong);
 			#ifdef AUDIO
 			StopSound(enemy_explode01);
 			StopSound(ship_shoot01);
